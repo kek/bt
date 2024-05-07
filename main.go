@@ -14,8 +14,11 @@ func main() {
 	devices := make(chan bluetooth.Device)
 	println("scanning...")
 	go scan(scanResults, devices)
+	println("oh yeah")
 	scanResult := <-scanResults
+	println("all right")
 	device := <-devices
+	println("for sure")
 	println(scanResult.LocalName())
 	services, err := device.DiscoverServices(nil)
 	must("discover services", err)
@@ -40,16 +43,10 @@ func scan(scanResults chan bluetooth.ScanResult, devices chan bluetooth.Device) 
 	err := adapter.Scan(func(adapter *bluetooth.Adapter, scanResult bluetooth.ScanResult) {
 		name := scanResult.LocalName()
 		if deviceIsBanglejs(name) {
-			connectionParams := bluetooth.ConnectionParams{
-				ConnectionTimeout: 10,
-				MinInterval:       1,
-				MaxInterval:       10,
-				Timeout:           30,
-			}
-			adapter.StopScan()
-			device, err := adapter.Connect(scanResult.Address, connectionParams)
-			must("connect", err)
+			_ = adapter.StopScan()
 			scanResults <- scanResult
+			device, err := adapter.Connect(scanResult.Address, bluetooth.ConnectionParams{})
+			must("connect", err)
 			devices <- device
 		}
 	})
