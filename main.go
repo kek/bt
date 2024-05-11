@@ -22,21 +22,28 @@ func main() {
 	println(scanResult.LocalName())
 	services, err := device.DiscoverServices(nil)
 	must("discover services", err)
+	loopThroughServices(services)
+	println("Done!")
+}
+
+func loopThroughServices(services []bluetooth.DeviceService) {
 	for i := range services {
 		service := services[i]
 		println(service.String())
-		characteristic, err := service.DiscoverCharacteristics(nil)
+		characteristics, err := service.DiscoverCharacteristics(nil)
 		must("discover characteristics", err)
-		for i := range characteristic {
-			char := characteristic[i]
-			println(char.String())
-		}
-		// For the simplest control, all you need to do is connect to the Espruino bluetooth device
-		// and the characteristic with ID 6e400002b5a3f393e0a9e50e24dcca9e. You can then write
-		// repeatedly to it to send commands to Espruino.
+		loopThroughCharacteristics(characteristics)
+
 		println("")
 	}
-	println("Done!")
+}
+
+func loopThroughCharacteristics(characteristic []bluetooth.DeviceCharacteristic) {
+	for i := range characteristic {
+		char := characteristic[i]
+		// search for 6e400002b5a3f393e0a9e50e24dcca9e
+		println(char.String())
+	}
 }
 
 func scan(scanResults chan bluetooth.ScanResult, devices chan bluetooth.Device) {
@@ -45,6 +52,7 @@ func scan(scanResults chan bluetooth.ScanResult, devices chan bluetooth.Device) 
 		if deviceIsBanglejs(name) {
 			_ = adapter.StopScan()
 			scanResults <- scanResult
+			println("got a Bangle.js device", scanResult.LocalName())
 			device, err := adapter.Connect(scanResult.Address, bluetooth.ConnectionParams{})
 			must("connect", err)
 			devices <- device
