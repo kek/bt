@@ -20,4 +20,4 @@ test-rust-lib:
 
 .PHONY: clean
 clean:
-	rm -rf out rust/target
+	rm -rfv out rust/target

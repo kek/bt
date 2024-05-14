@@ -1,8 +1,8 @@
 package main
 
 /*
-#cgo LDFLAGS: ./rust/target/release/libhello.a -ldl
-#include "./hello.h"
+#cgo LDFLAGS: ./rust/target/release/libbluetooth.a -ldl
+#include "./bluetooth.h"
 */
 import "C"
 
