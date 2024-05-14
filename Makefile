@@ -5,13 +5,13 @@ all: build run
 
 .PHONY: build
 build:
+	@mkdir -p out
 	@cd rust && cargo build --release
-	@cp rust/target/release/libhello.a lib/
-	go build main.go
+	@go build -o out/btscan .
 
 .PHONY: run
 run: build
-	@./main
+	@./out/btscan
 
 # This is just for running the Rust lib tests natively via cargo
 .PHONY: test-rust-lib

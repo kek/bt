@@ -1,8 +1,8 @@
 package main
 
 /*
-#cgo LDFLAGS: ./lib/libhello.a -ldl
-#include "./lib/hello.h"
+#cgo LDFLAGS: ./rust/target/release/libhello.a -ldl
+#include "./hello.h"
 */
 import "C"
 
