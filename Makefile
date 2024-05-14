@@ -1,20 +1,17 @@
 ROOT_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 
-.PHONY: build-all
-build-all: build-static
+.PHONY: all
+all: build run
 
-.PHONY: run-all
-run-all: run-static
-
-.PHONY: build-static
-build-static:
+.PHONY: build
+build:
 	@cd lib/hello && cargo build --release
 	@cp lib/hello/target/release/libhello.a lib/
 	go build main.go
 
-.PHONY: run-static
-run-static: build-static
-	@./main_static
+.PHONY: run
+run: build
+	@./main
 
 # This is just for running the Rust lib tests natively via cargo
 .PHONY: test-rust-lib
