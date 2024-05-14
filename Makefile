@@ -7,11 +7,11 @@ all: build run
 build:
 	@mkdir -p out
 	@cd rust && cargo build --release
-	@go build -o out/btscan .
+	@go build -o out/bt .
 
 .PHONY: run
 run: build
-	@./out/btscan
+	@./out/bt
 
 # This is just for running the Rust lib tests natively via cargo
 .PHONY: test-rust-lib
