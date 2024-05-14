@@ -20,4 +20,4 @@ test-rust-lib:
 
 .PHONY: clean
 clean:
-	rm -rf main_dynamic main_static lib/libhello.a rust/target
+	rm -rf out rust/target
