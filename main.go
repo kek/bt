@@ -1,5 +1,11 @@
 package main
 
+/*
+#cgo LDFLAGS: ./lib/libhello.a -ldl
+#include "./lib/hello.h"
+*/
+import "C"
+
 import (
 	"tinygo.org/x/bluetooth"
 )
@@ -7,6 +13,9 @@ import (
 var adapter = bluetooth.DefaultAdapter
 
 func main() {
+	C.hello(C.CString("world"))
+	C.whisper(C.CString("this is code from the static library"))
+
 	must("enable BLE stack", adapter.Enable())
 
 	// create channel
