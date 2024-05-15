@@ -3,3 +3,5 @@
 
 void hello(char *name);
 void whisper(char *message);
+void bluetooth_upload(char *program);
+char *make_string();
