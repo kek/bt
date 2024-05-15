@@ -5,13 +5,13 @@ all: build run
 
 .PHONY: build
 build:
-	mkdir -p out
-	cd rust && cargo build --release
-	go build -o out/bt .
+	@mkdir -p out
+	@cd rust && cargo build --release --quiet
+	@go build -o out/bt .
 
 .PHONY: run
 run: build
-	go run .
+	@go run .
 
 .PHONY: test-rust-lib
 test-rust-lib:
@@ -19,7 +19,7 @@ test-rust-lib:
 
 .PHONY: test
 test: build
-	go test -v
+	@go test -v
 
 .PHONY: clean
 clean:

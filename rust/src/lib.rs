@@ -30,7 +30,6 @@ pub mod test {
 
     use super::*;
 
-    // This is meant to do the same stuff as the main function in the .go files
     #[test]
     fn simulated_main_function() {
         bluetooth_upload(CString::new("undefined").unwrap().into_raw());
