@@ -5,13 +5,13 @@ all: build run
 
 .PHONY: build
 build:
-	@mkdir -p out
-	@cd rust && cargo build --release
-	@go build -o out/bt .
+	mkdir -p out
+	cd rust && cargo build --release
+	go build -o out/bt .
 
 .PHONY: run
 run: build
-	@go run .
+	go run .
 
 # This is just for running the Rust lib tests natively via cargo
 .PHONY: test-rust-lib

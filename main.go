@@ -7,11 +7,14 @@ package main
 */
 import "C"
 
+//export addTogether
+func addTogether(x C.int, y C.int) C.int { return C.int(x + y) }
+
 func main() {
 	cS := C.make_string()
 	println("C string:", cS)
 	gS := C.GoString(cS)
-	println("go string:", gS)
+	println("go string: >>>", gS, "<<<")
 
 	//C.bluetooth_upload(C.CString("console.log('hello world!')"))
 
@@ -21,8 +24,10 @@ func main() {
 	//scanResult := <-scanResults
 }
 
+/*
 func must(action string, err error) {
 	if err != nil {
 		panic("failed to " + action + ": " + err.Error())
 	}
 }
+*/
