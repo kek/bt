@@ -3,4 +3,4 @@
 
 void bluetooth_upload(char *program);
 char *make_string();
-char *make_c_string();
+void send_me_a_message();
