@@ -11,7 +11,7 @@ build:
 
 .PHONY: run
 run: build
-	@./out/bt
+	@go run .
 
 # This is just for running the Rust lib tests natively via cargo
 .PHONY: test-rust-lib
