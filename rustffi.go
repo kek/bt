@@ -15,12 +15,6 @@ func SendGoMessage(cString *C.char) {
 	myChannel <- goString
 }
 
-func getStringFromC() string {
-	cString := C.make_string()
-	goString := C.GoString(cString)
-	return goString
-}
-
-func sendMeAMessage() {
-	C.send_me_a_message()
+func BluetoothScan() {
+	C.bluetooth_scan()
 }

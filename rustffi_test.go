@@ -20,3 +20,9 @@ func TestReceiveMessage(t *testing.T) {
 		t.Errorf("got %s, want %s", got, want)
 	}
 }
+
+func must(action string, err error) {
+	if err != nil {
+		panic("failed to " + action + ": " + err.Error())
+	}
+}

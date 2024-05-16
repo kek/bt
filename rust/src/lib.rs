@@ -24,6 +24,12 @@ pub extern "C" fn send_me_a_message() {
     unsafe { SendGoMessage(s) }
 }
 
+#[no_mangle]
+pub extern "C" fn bluetooth_scan() {
+    let s = "Hey there\0".as_ptr();
+    unsafe { SendGoMessage(s) }
+}
+
 #[cfg(test)]
 pub mod test {
     use std::ffi::CString;
