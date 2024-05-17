@@ -1,7 +1,7 @@
 package main
 
 /*
-#cgo LDFLAGS: src/build/lib/libbluetooth.a src/build/lib/libsimpleble.a src/build/lib/libsimpleble-c.a -lstdc++ -ldl -framework Foundation -framework CoreBluetooth
+#cgo LDFLAGS: src/build/lib/libbluetooth.a src/build/lib/libbluetooth_example.a src/build/lib/libsimpleble.a src/build/lib/libsimpleble-c.a -lstdc++ -ldl -framework Foundation -framework CoreBluetooth
 #cgo CFLAGS: -I../SimpleBLE/simpleble/include -I./src/build/simpleble/export
 #include <stdlib.h>
 #include "./bluetooth.h"
@@ -18,5 +18,5 @@ func SendGoMessage(cString *C.char) {
 }
 
 func BluetoothScan() {
-	C.something()
+	C.bluetooth_scan()
 }

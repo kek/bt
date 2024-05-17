@@ -27,3 +27,6 @@ target_link_libraries(example_scan_c simpleble::simpleble-c)
 
 add_library(bluetooth bluetooth.c)
 target_link_libraries(bluetooth simpleble::simpleble-c)
+
+add_library(bluetooth_example bluetooth_example.c)
+target_link_libraries(bluetooth_example simpleble::simpleble-c)
