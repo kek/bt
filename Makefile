@@ -6,7 +6,10 @@ all: build run
 .PHONY: build
 build:
 	@mkdir -p out
-	@cd rust && cargo build --release --quiet
+	@cd rust && cargo build --release
+	@mkdir -p build
+	@cp rust/target/release/libbluetooth.a build
+	@cp `find rust/target/release/build -name '*.a'` build
 	@go build -o out/bt .
 
 .PHONY: run
@@ -23,4 +26,4 @@ test: build
 
 .PHONY: clean
 clean:
-	rm -rfv out rust/target
+	rm -rfv out rust/target build
