@@ -26,6 +26,16 @@ pub extern "C" fn send_me_a_message() {
 
 #[no_mangle]
 pub extern "C" fn bluetooth_scan() {
+    let mut adapters = simplersble::Adapter::get_adapters().unwrap();
+    let mut adapter = adapters.pop().expect("No Bluetooth adapter found");
+    adapter.set_callback_on_scan_start(Box::new(|| {
+        println!("Scan started.");
+    }));
+
+    adapter.set_callback_on_scan_stop(Box::new(|| {
+        println!("Scan stopped.");
+    }));
+
     let s = "Hey there\0".as_ptr();
     unsafe { SendGoMessage(s) }
 }
