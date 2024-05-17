@@ -15,24 +15,12 @@ else()
     find_package(simpleble CONFIG REQUIRED)
 endif()
 
-# C++
-add_subdirectory(cpp/list_adapters)
-add_subdirectory(cpp/list_adapters_safe)
-add_subdirectory(cpp/scan)
-add_subdirectory(cpp/connect)
-add_subdirectory(cpp/connect_safe)
-add_subdirectory(cpp/multiconnect)
-add_subdirectory(cpp/read)
-add_subdirectory(cpp/write)
-add_subdirectory(cpp/notify)
-add_subdirectory(cpp/notify_multi)
-
 # C
-add_executable(example_connect_c c/connect.c)
+add_executable(example_connect_c connect.c)
 target_link_libraries(example_connect_c simpleble::simpleble-c)
 
-add_executable(example_notify_c c/notify.c)
+add_executable(example_notify_c notify.c)
 target_link_libraries(example_notify_c simpleble::simpleble-c)
 
-add_executable(example_scan_c c/scan.c)
+add_executable(example_scan_c scan.c)
 target_link_libraries(example_scan_c simpleble::simpleble-c)
