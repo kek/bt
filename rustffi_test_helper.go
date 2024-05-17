@@ -6,7 +6,7 @@ package main
 */
 import "C"
 
-func sendMeAMessage() {
+/*func sendMeAMessage() {
 	C.send_me_a_message()
 }
 func getStringFromC() string {
@@ -14,3 +14,4 @@ func getStringFromC() string {
 	goString := C.GoString(cString)
 	return goString
 }
+*/

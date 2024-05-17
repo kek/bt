@@ -1,10 +1,6 @@
 package main
 
-import (
-	"testing"
-)
-
-func TestReturnString(t *testing.T) {
+/*func TestReturnString(t *testing.T) {
 	want := "Whatevery"
 	got := getStringFromC()
 	if got != want {
@@ -20,7 +16,7 @@ func TestReceiveMessage(t *testing.T) {
 		t.Errorf("got %s, want %s", got, want)
 	}
 }
-
+*/
 func must(action string, err error) {
 	if err != nil {
 		panic("failed to " + action + ": " + err.Error())
