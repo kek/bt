@@ -7,7 +7,7 @@ all: build run
 build:
 	@mkdir -p src/build
 	@cd src/build && cmake .. && make
-	@go build -o build/bt .
+	@go build -o bt .
 
 .PHONY: run
 run: build
