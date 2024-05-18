@@ -5,8 +5,8 @@ all: build run
 
 .PHONY: build
 build:
-	@mkdir -p src/build
-	@cd src/build && cmake .. && make
+	@mkdir -p build
+	@cd build && cmake ../src && make
 	@go build -o bt .
 
 .PHONY: run

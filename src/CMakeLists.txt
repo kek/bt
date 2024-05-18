@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.21)
 
-include(${CMAKE_CURRENT_SOURCE_DIR}/../cmake/prelude.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/prelude.cmake)
 project(simpleble_examples)
-include(${CMAKE_CURRENT_SOURCE_DIR}/../cmake/epilogue.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/epilogue.cmake)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
