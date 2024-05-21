@@ -6,7 +6,7 @@ all: build run
 .PHONY: build
 build:
 	@mkdir -p build
-	@cd build && cmake ../src && make
+	@cd build && cmake -G "Unix Makefiles" ../src && make
 	@go build -o bt .
 
 .PHONY: run
@@ -19,4 +19,4 @@ test: build
 
 .PHONY: clean
 clean:
-	rm -rfv rust/target build
+	rm -rfv rust/target build bt
