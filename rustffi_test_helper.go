@@ -2,7 +2,7 @@ package main
 
 /*
 #include <stdlib.h>
-#include "./bluetooth.h"
+#include "./src/bluetooth.h"
 */
 import "C"
 

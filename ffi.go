@@ -4,7 +4,7 @@ package main
 #cgo LDFLAGS: build/lib/libbluetooth.a build/lib/libbluetooth_example.a build/lib/libsimpleble.a build/lib/libsimpleble-c.a -lstdc++ -ldl -framework Foundation -framework CoreBluetooth
 #cgo CFLAGS: -I../SimpleBLE/simpleble/include -I./build/simpleble/export
 #include <stdlib.h>
-#include "./bluetooth.h"
+#include "./src/bluetooth.h"
 #include <simpleble_c/simpleble.h>
 */
 import "C"
