@@ -5,17 +5,18 @@
 #include "bluetooth.h"
 
 extern void SendGoMessage(char* message);
+extern void SendGoDone();
 
 static void adapter_on_scan_start(simpleble_adapter_t adapter, void* userdata) {
-  printf("Scanning started\n");
+  SendGoMessage("SCAN START");
 }
 
 static void adapter_on_scan_stop(simpleble_adapter_t adapter, void* userdata) {
-  SendGoMessage("SCAN STOP");
+  SendGoDone();
 }
 
 static void adapter_on_scan_found(simpleble_adapter_t adapter, simpleble_peripheral_t peripheral, void* userdata) {
-  printf("Scanning found\n");
+  SendGoMessage("SCAN FOUND");
 }
 
 #define assert(condition, msg) if (!condition) { printf("%s", msg); exit(255); }

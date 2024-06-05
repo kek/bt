@@ -9,12 +9,21 @@ package main
 */
 import "C"
 
-var myChannel chan string
+var myChannel chan ScanMsg
+
+type MsgDone struct{}
+type MsgInfo string
+type ScanMsg interface{}
 
 //export SendGoMessage
 func SendGoMessage(cString *C.char) {
 	goString := C.GoString(cString)
-	myChannel <- goString
+	myChannel <- MsgInfo(goString)
+}
+
+//export SendGoDone
+func SendGoDone() {
+	myChannel <- MsgDone{}
 }
 
 func BluetoothScan() {

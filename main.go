@@ -1,8 +1,19 @@
 package main
 
+import "fmt"
+
 func main() {
-	myChannel = make(chan string)
+	myChannel = make(chan ScanMsg)
 	go BluetoothScan()
-	s := <-myChannel
-	println("got", s, "on my channel")
+	done := false
+	for !done {
+		s := <-myChannel
+		switch s.(type) {
+		case MsgInfo:
+			fmt.Println("got", s, "on my channel")
+		case MsgDone:
+			println("DONE")
+			done = true
+		}
+	}
 }
