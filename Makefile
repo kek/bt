@@ -11,6 +11,7 @@ build:
 
 .PHONY: run
 run: build
+	@echo Running.
 	@go run .
 
 .PHONY: test

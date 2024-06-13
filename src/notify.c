@@ -30,11 +30,12 @@ static void clean_on_exit(void);
 static void adapter_on_scan_start(simpleble_adapter_t adapter, void* userdata);
 static void adapter_on_scan_stop(simpleble_adapter_t adapter, void* userdata);
 static void adapter_on_scan_found(simpleble_adapter_t adapter, simpleble_peripheral_t peripheral, void* userdata);
+static unsigned long NewFunction(char* peripheral_identifier, char* peripheral_address);
 static void peripheral_on_notify(simpleble_uuid_t service, simpleble_uuid_t characteristic, const uint8_t* data,
-                                 size_t data_length, void* userdata);
+    size_t data_length, void* userdata);
 
-static service_characteristic_t characteristic_list[SERVICES_LIST_SIZE] = {0};
-static simpleble_peripheral_t peripheral_list[PERIPHERAL_LIST_SIZE] = {0};
+static service_characteristic_t characteristic_list[SERVICES_LIST_SIZE] = { 0 };
+static simpleble_peripheral_t peripheral_list[PERIPHERAL_LIST_SIZE] = { 0 };
 static size_t peripheral_list_len = 0;
 static simpleble_adapter_t adapter = NULL;
 
@@ -130,13 +131,13 @@ int main() {
     }
 
     simpleble_peripheral_notify(peripheral, characteristic_list[selection].service,
-                                characteristic_list[selection].characteristic, peripheral_on_notify, NULL);
+        characteristic_list[selection].characteristic, peripheral_on_notify, NULL);
 
     // Sleep for 5 seconds
     msleep(5000);
 
     simpleble_peripheral_unsubscribe(peripheral, characteristic_list[selection].service,
-                                     characteristic_list[selection].characteristic);
+        characteristic_list[selection].characteristic);
 
     simpleble_peripheral_disconnect(peripheral);
 
@@ -206,7 +207,7 @@ static void adapter_on_scan_found(simpleble_adapter_t adapter, simpleble_periphe
 }
 
 static void peripheral_on_notify(simpleble_uuid_t service, simpleble_uuid_t characteristic, const uint8_t* data,
-                                 size_t data_length, void* userdata) {
+    size_t data_length, void* userdata) {
     printf("Received: ");
     for (size_t i = 0; i < data_length; i++) {
         printf("%02X ", data[i]);

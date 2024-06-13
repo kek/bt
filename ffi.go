@@ -11,19 +11,33 @@ import "C"
 
 var myChannel chan ScanMsg
 
-type MsgDone struct{}
-type MsgInfo string
+type ScanDone struct{}
+type DeviceFound struct {
+	Identifier string
+	Address    string
+}
+
 type ScanMsg interface{}
 
-//export SendGoMessage
-func SendGoMessage(cString *C.char) {
-	goString := C.GoString(cString)
-	myChannel <- MsgInfo(goString)
+func (i DeviceFound) String() string {
+	switch i.Identifier {
+	case "":
+		return "Unknown" + "/" + i.Address
+	default:
+		return i.Identifier + "/" + i.Address
+	}
+}
+
+//export GoDeviceFound
+func GoDeviceFound(cIdentifier *C.char, cAddress *C.char) {
+	identifier := C.GoString(cIdentifier)
+	address := C.GoString(cAddress)
+	myChannel <- DeviceFound{identifier, address}
 }
 
 //export SendGoDone
 func SendGoDone() {
-	myChannel <- MsgDone{}
+	myChannel <- ScanDone{}
 }
 
 func BluetoothScan() {
