@@ -5,8 +5,8 @@ all: build run
 
 .PHONY: build
 build:
-	@mkdir -p build
-	@cd build && cmake -G "Unix Makefiles" ../src && make
+	@mkdir -p bluetooth/build
+	@cd bluetooth/build && cmake -G "Unix Makefiles" ../src && make
 	@go build -o bt .
 
 .PHONY: run
@@ -20,4 +20,4 @@ test: build
 
 .PHONY: clean
 clean:
-	rm -rfv rust/target build bt
+	rm -rfv bluetooth/build bt

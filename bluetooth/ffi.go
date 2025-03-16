@@ -1,8 +1,8 @@
-package main
+package bluetooth
 
 /*
-#cgo LDFLAGS: build/lib/libbluetooth.a build/lib/libbluetooth_example.a build/lib/libsimpleble.a build/lib/libsimpleble-c.a -lstdc++ -ldl -framework Foundation -framework CoreBluetooth
-#cgo CFLAGS: -I../SimpleBLE/simpleble/include -I./build/simpleble/export
+#cgo LDFLAGS: bluetooth/build/lib/libbluetooth.a bluetooth/build/lib/libbluetooth_example.a bluetooth/build/lib/libsimpleble.a bluetooth/build/lib/libsimpleble-c.a -lstdc++ -ldl -framework Foundation -framework CoreBluetooth
+#cgo CFLAGS: -I../../SimpleBLE/simpleble/include -I./build/simpleble/export
 #include <stdlib.h>
 #include "./src/bluetooth.h"
 #include <simpleble_c/simpleble.h>
@@ -26,6 +26,11 @@ func (i DeviceFound) String() string {
 	default:
 		return i.Identifier + "/" + i.Address
 	}
+}
+
+func CreateChannel() chan ScanMsg {
+	deviceScanChannel = make(chan ScanMsg)
+	return deviceScanChannel
 }
 
 //export AnnounceDeviceWasFound

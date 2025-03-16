@@ -10,7 +10,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 option(SIMPLEBLE_LOCAL "Use local SimpleBLE" ON)
 
 if (SIMPLEBLE_LOCAL)
-    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../../SimpleBLE/simpleble ${CMAKE_BINARY_DIR}/simpleble)
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../../../SimpleBLE/simpleble ${CMAKE_BINARY_DIR}/simpleble)
 else()
     find_package(simpleble CONFIG REQUIRED)
 endif()

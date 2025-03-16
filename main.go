@@ -1,22 +1,23 @@
 package main
 
 import (
+	"bt/bluetooth"
 	"fmt"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
 
 type model struct {
-	subscription chan ScanMsg
+	subscription chan bluetooth.ScanMsg
 	devices      []string
 	scanDone     bool
 }
 
 func initialModel() model {
-	deviceScanChannel = make(chan ScanMsg)
+	ch := bluetooth.CreateChannel()
 
 	return model{
-		subscription: deviceScanChannel,
+		subscription: ch,
 	}
 }
 
@@ -28,7 +29,7 @@ func (m model) nextfun() func() tea.Msg {
 }
 
 func (m model) Init() tea.Cmd {
-	go StartScan()
+	go bluetooth.StartScan()
 	clear := func() tea.Msg {
 		return tea.ClearScreen()
 	}
@@ -43,10 +44,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		m, c := m.handleKeyPress(msg)
 		return m, c
-	case DeviceFound:
+	case bluetooth.DeviceFound:
 		m.devices = append(m.devices, msg.String())
 		return m, m.nextfun()
-	case ScanDone:
+	case bluetooth.ScanDone:
 		m.scanDone = true
 		return m, nil
 	}
@@ -61,7 +62,7 @@ func (m model) handleKeyPress(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	case "ctrl+c":
 		cmd = tea.Quit
 	case "r":
-		go StartScan()
+		go bluetooth.StartScan()
 		m.devices = []string{}
 		m.scanDone = false
 		cmd = m.nextfun()
