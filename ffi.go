@@ -9,7 +9,7 @@ package main
 */
 import "C"
 
-var myChannel chan ScanMsg
+var deviceScanChannel chan ScanMsg
 
 type ScanDone struct{}
 type DeviceFound struct {
@@ -28,18 +28,18 @@ func (i DeviceFound) String() string {
 	}
 }
 
-//export GoDeviceFound
-func GoDeviceFound(cIdentifier *C.char, cAddress *C.char) {
+//export AnnounceDeviceWasFound
+func AnnounceDeviceWasFound(cIdentifier *C.char, cAddress *C.char) {
 	identifier := C.GoString(cIdentifier)
 	address := C.GoString(cAddress)
-	myChannel <- DeviceFound{identifier, address}
+	deviceScanChannel <- DeviceFound{identifier, address}
 }
 
-//export SendGoDone
-func SendGoDone() {
-	myChannel <- ScanDone{}
+//export AnnounceScanIsDone
+func AnnounceScanIsDone() {
+	deviceScanChannel <- ScanDone{}
 }
 
-func BluetoothScan() {
+func StartScan() {
 	C.bluetooth_scan()
 }

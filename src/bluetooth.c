@@ -5,14 +5,14 @@
 
 #include "bluetooth.h"
 
-extern void GoDeviceFound(char* peripheral_identifier, char* peripheral_address);
-extern void SendGoDone();
+extern void AnnounceDeviceWasFound(char* peripheral_identifier, char* peripheral_address);
+extern void AnnounceScanIsDone();
 
 static void adapter_on_scan_start(simpleble_adapter_t adapter, void* userdata) {
 }
 
 static void adapter_on_scan_stop(simpleble_adapter_t adapter, void* userdata) {
-  SendGoDone();
+  AnnounceScanIsDone();
 }
 
 static void adapter_on_scan_found(simpleble_adapter_t adapter, simpleble_peripheral_t peripheral, void* userdata) {
@@ -25,7 +25,7 @@ static void adapter_on_scan_found(simpleble_adapter_t adapter, simpleble_periphe
   } else {
     sprintf(result, "%s", peripheral_address);
   }
-  GoDeviceFound(peripheral_identifier, peripheral_address);
+  AnnounceDeviceWasFound(peripheral_identifier, peripheral_address);
   free(result);
 }
 
