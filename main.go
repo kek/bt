@@ -41,14 +41,8 @@ func (m model) Init() tea.Cmd {
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
-		if msg.String() == "q" || msg.String() == "ctrl+c" {
-			return m, tea.Quit
-		} else if msg.String() == "r" {
-			go StartScan()
-			m.devices = []string{}
-			m.scanDone = false
-			return m, m.nextfun()
-		}
+		m, c := m.handleKeyPress(msg)
+		return m, c
 	case DeviceFound:
 		m.devices = append(m.devices, msg.String())
 		return m, m.nextfun()
@@ -57,6 +51,22 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, nil
 	}
 	return m, nil
+}
+
+func (m model) handleKeyPress(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
+	var cmd tea.Cmd
+	switch msg.String() {
+	case "q":
+		fallthrough
+	case "ctrl+c":
+		cmd = tea.Quit
+	case "r":
+		go StartScan()
+		m.devices = []string{}
+		m.scanDone = false
+		cmd = m.nextfun()
+	}
+	return m, cmd
 }
 
 func (m model) View() string {
