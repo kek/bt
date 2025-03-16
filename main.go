@@ -9,6 +9,7 @@ import (
 type model struct {
 	subscription chan ScanMsg
 	devices      []string
+	scanDone     bool
 }
 
 func initialModel() model {
@@ -28,8 +29,13 @@ func (m model) nextfun() func() tea.Msg {
 
 func (m model) Init() tea.Cmd {
 	go StartScan()
-
-	return m.nextfun()
+	clear := func() tea.Msg {
+		return tea.ClearScreen()
+	}
+	return tea.Sequence(
+		clear,
+		m.nextfun(),
+	)
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -37,12 +43,18 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		if msg.String() == "q" || msg.String() == "ctrl+c" {
 			return m, tea.Quit
+		} else if msg.String() == "r" {
+			go StartScan()
+			m.devices = []string{}
+			m.scanDone = false
+			return m, m.nextfun()
 		}
 	case DeviceFound:
 		m.devices = append(m.devices, msg.String())
 		return m, m.nextfun()
 	case ScanDone:
-		return m, tea.Quit
+		m.scanDone = true
+		return m, nil
 	}
 	return m, nil
 }
@@ -52,7 +64,14 @@ func (m model) View() string {
 	for _, device := range m.devices {
 		s += fmt.Sprintf("%s\n", device)
 	}
+	if m.scanDone {
+		s += menu()
+	}
 	return s
+}
+
+func menu() string {
+	return "Press 'r' to restart the scan.\n" + "Press 'q' to quit.\n"
 }
 
 func main() {
