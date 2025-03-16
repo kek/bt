@@ -23,8 +23,8 @@ func initialModel() model {
 
 func (m model) nextfun() func() tea.Msg {
 	return func() tea.Msg {
-		s := <-m.subscription
-		return s
+		msg := <-m.subscription
+		return msg
 	}
 }
 
@@ -40,21 +40,20 @@ func (m model) Init() tea.Cmd {
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	var cmd tea.Cmd
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
-		m, c := m.handleKeyPress(msg)
-		return m, c
+		m, cmd = m.handleKeyPress(msg)
 	case bluetooth.DeviceFound:
 		m.devices = append(m.devices, msg.String())
-		return m, m.nextfun()
+		cmd = m.nextfun()
 	case bluetooth.ScanDone:
 		m.scanDone = true
-		return m, nil
 	}
-	return m, nil
+	return m, cmd
 }
 
-func (m model) handleKeyPress(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
+func (m model) handleKeyPress(msg tea.KeyMsg) (model, tea.Cmd) {
 	var cmd tea.Cmd
 	switch msg.String() {
 	case "q":
@@ -72,11 +71,14 @@ func (m model) handleKeyPress(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 
 func (m model) View() string {
 	s := ""
-	for _, device := range m.devices {
-		s += fmt.Sprintf("%s\n", device)
+	if len(m.devices) > 0 {
+		s += fmt.Sprintf("Found %d devices.\n", len(m.devices))
 	}
 	if m.scanDone {
 		s += menu()
+	}
+	for _, device := range m.devices {
+		s += fmt.Sprintf("%s\n", device)
 	}
 	return s
 }

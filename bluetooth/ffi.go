@@ -17,7 +17,7 @@ type DeviceFound struct {
 	Address    string
 }
 
-type ScanMsg interface{}
+type ScanMsg any
 
 func (i DeviceFound) String() string {
 	switch i.Identifier {
