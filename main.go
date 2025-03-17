@@ -9,35 +9,42 @@ import (
 
 type model struct {
 	subscription chan bluetooth.ScanMsg
-	devices      []string
+	devices      []bluetooth.Device
 	scanDone     bool
 	selected     int
+	screen       screen
+	debugMsg     string
 }
+
+type screen int
+
+const (
+	Scan screen = iota
+	Connect
+)
 
 func initialModel() model {
-	ch := bluetooth.CreateChannel()
-
 	return model{
-		subscription: ch,
-	}
-}
-
-func (m model) nextfun() func() tea.Msg {
-	return func() tea.Msg {
-		msg := <-m.subscription
-		return msg
+		subscription: bluetooth.CreateChannel(),
+		screen:       Scan,
+		debugMsg:     "",
 	}
 }
 
 func (m model) Init() tea.Cmd {
 	go bluetooth.StartScan()
+
 	clear := func() tea.Msg {
 		return tea.ClearScreen()
 	}
 	return tea.Sequence(
 		clear,
-		m.nextfun(),
+		m.nextScanResult(),
 	)
+}
+
+type connectToDevice struct {
+	device bluetooth.Device
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -45,13 +52,20 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		m, cmd = m.handleKeyPress(msg)
-	case bluetooth.DeviceFound:
-		m.devices = append(m.devices, msg.String())
-		cmd = m.nextfun()
+	case bluetooth.Device:
+		m.devices = append(m.devices, msg)
+		cmd = m.nextScanResult()
 	case bluetooth.ScanDone:
 		m.scanDone = true
+	case connectToDevice:
+		m.screen = Connect
+		m.debug(msg.device.Identifier)
 	}
 	return m, cmd
+}
+
+func (m *model) debug(identifier string) {
+	m.debugMsg += identifier + ". "
 }
 
 func (m model) handleKeyPress(msg tea.KeyMsg) (model, tea.Cmd) {
@@ -62,10 +76,13 @@ func (m model) handleKeyPress(msg tea.KeyMsg) (model, tea.Cmd) {
 	case "ctrl+c":
 		cmd = tea.Quit
 	case "r":
-		go bluetooth.StartScan()
-		m.devices = []string{}
+		m.subscription = bluetooth.CreateChannel()
+		m.devices = []bluetooth.Device{}
 		m.scanDone = false
-		cmd = m.nextfun()
+		m.selected = 0
+		m.screen = Scan
+		cmd = m.nextScanResult()
+		go bluetooth.StartScan()
 	case "j":
 		fallthrough
 	case "down":
@@ -80,28 +97,46 @@ func (m model) handleKeyPress(msg tea.KeyMsg) (model, tea.Cmd) {
 		}
 	case "enter":
 		if m.selected < len(m.devices) {
-			device := m.devices[m.selected]
-			fmt.Printf("Connecting to %s...\n", device)
-			// TODO: Implement connection logic
+			cmd = func() tea.Msg {
+				return connectToDevice{device: m.devices[m.selected]}
+			}
 		}
 	}
 	return m, cmd
 }
 
+func (m model) nextScanResult() func() tea.Msg {
+	return func() tea.Msg {
+		msg := <-m.subscription
+		return msg
+	}
+}
+
 func (m model) View() string {
 	s := ""
-	if len(m.devices) > 0 {
-		s += fmt.Sprintf("Found %d devices.\n", len(m.devices))
-	}
-	if m.scanDone {
-		s += menu()
-	}
-	for i, device := range m.devices {
-		if i == m.selected {
-			s += fmt.Sprintf("-> %s\n", device)
-		} else {
-			s += fmt.Sprintf("   %s\n", device)
+	s += m.debugMsg + "\n\n"
+	switch m.screen {
+	case Scan:
+		if len(m.devices) > 0 {
+			s += fmt.Sprintf("Found %d devices.\n", len(m.devices))
 		}
+		if m.scanDone {
+			s += menu()
+		}
+		for i, device := range m.devices {
+			if i == m.selected {
+				s += fmt.Sprintf("-> %s\n", device)
+			} else {
+				s += fmt.Sprintf("   %s\n", device)
+			}
+		}
+	case Connect:
+		s += "Connecting to "
+		if m.selected < len(m.devices) {
+			s += m.devices[m.selected].Identifier
+		}
+	default:
+		s += "Unknown screen"
 	}
 	return s
 }

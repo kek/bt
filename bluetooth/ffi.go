@@ -13,14 +13,14 @@ import "fmt"
 var deviceScanChannel chan ScanMsg
 
 type ScanDone struct{}
-type DeviceFound struct {
+type Device struct {
 	Identifier string
 	Address    string
 }
 
 type ScanMsg any
 
-func (i DeviceFound) String() string {
+func (i Device) String() string {
 	switch i.Identifier {
 	case "":
 		return fmt.Sprintf("%-20s %s", "Unknown", i.Address)
@@ -38,7 +38,7 @@ func CreateChannel() chan ScanMsg {
 func AnnounceDeviceWasFound(cIdentifier *C.char, cAddress *C.char) {
 	identifier := C.GoString(cIdentifier)
 	address := C.GoString(cAddress)
-	deviceScanChannel <- DeviceFound{identifier, address}
+	deviceScanChannel <- Device{identifier, address}
 }
 
 //export AnnounceScanIsDone
