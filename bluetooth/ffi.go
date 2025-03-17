@@ -8,6 +8,7 @@ package bluetooth
 #include <simpleble_c/simpleble.h>
 */
 import "C"
+import "fmt"
 
 var deviceScanChannel chan ScanMsg
 
@@ -22,9 +23,9 @@ type ScanMsg any
 func (i DeviceFound) String() string {
 	switch i.Identifier {
 	case "":
-		return "Unknown" + "/" + i.Address
+		return fmt.Sprintf("%-20s %s", "Unknown", i.Address)
 	default:
-		return i.Identifier + "/" + i.Address
+		return fmt.Sprintf("%-20s %s", i.Identifier, i.Address)
 	}
 }
 

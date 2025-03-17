@@ -11,6 +11,7 @@ type model struct {
 	subscription chan bluetooth.ScanMsg
 	devices      []string
 	scanDone     bool
+	selected     int
 }
 
 func initialModel() model {
@@ -65,6 +66,24 @@ func (m model) handleKeyPress(msg tea.KeyMsg) (model, tea.Cmd) {
 		m.devices = []string{}
 		m.scanDone = false
 		cmd = m.nextfun()
+	case "j":
+		fallthrough
+	case "down":
+		if m.selected < len(m.devices)-1 {
+			m.selected++
+		}
+	case "k":
+		fallthrough
+	case "up":
+		if m.selected > 0 {
+			m.selected--
+		}
+	case "enter":
+		if m.selected < len(m.devices) {
+			device := m.devices[m.selected]
+			fmt.Printf("Connecting to %s...\n", device)
+			// TODO: Implement connection logic
+		}
 	}
 	return m, cmd
 }
@@ -77,8 +96,12 @@ func (m model) View() string {
 	if m.scanDone {
 		s += menu()
 	}
-	for _, device := range m.devices {
-		s += fmt.Sprintf("%s\n", device)
+	for i, device := range m.devices {
+		if i == m.selected {
+			s += fmt.Sprintf("-> %s\n", device)
+		} else {
+			s += fmt.Sprintf("   %s\n", device)
+		}
 	}
 	return s
 }
