@@ -3,6 +3,7 @@ package main
 import (
 	"bt/bluetooth"
 	"fmt"
+	"slices"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -13,7 +14,7 @@ type model struct {
 	scanDone     bool
 	selected     int
 	screen       screen
-	debugMsg     string
+	debugMsg     []string
 }
 
 type screen int
@@ -27,7 +28,7 @@ func initialModel() model {
 	return model{
 		subscription: bluetooth.CreateChannel(),
 		screen:       Scan,
-		debugMsg:     "",
+		debugMsg:     nil,
 	}
 }
 
@@ -65,7 +66,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m *model) debug(identifier string) {
-	m.debugMsg += identifier + ". "
+	m.debugMsg = append(m.debugMsg, identifier)
 }
 
 func (m model) handleKeyPress(msg tea.KeyMsg) (model, tea.Cmd) {
@@ -114,7 +115,6 @@ func (m model) nextScanResult() func() tea.Msg {
 
 func (m model) View() string {
 	s := ""
-	s += m.debugMsg + "\n\n"
 	switch m.screen {
 	case Scan:
 		if len(m.devices) > 0 {
@@ -138,7 +138,20 @@ func (m model) View() string {
 	default:
 		s += "Unknown screen"
 	}
+	s += "\n\n"
+	log := slices.Clone(last(m.debugMsg, 5))
+	slices.Reverse(log)
+	for _, msg := range log {
+		s += fmt.Sprintf("%s\n", msg)
+	}
 	return s
+}
+
+func last[T any](slice []T, n int) []T {
+	if len(slice) < n {
+		return slice
+	}
+	return slice[len(slice)-n:]
 }
 
 func menu() string {
